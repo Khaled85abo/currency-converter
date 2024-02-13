@@ -44,7 +44,6 @@ const Header = () => {
             tracking exchange rates
           </p>
         </div>
-        <Converter />
       </div>
     </header>
   );

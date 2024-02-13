@@ -1,6 +1,8 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { useAppDispatch } from "../hooks/redux";
+import { setCurrency } from "../redux/features/currency/currencySlice";
 
 type Currency = {
   id: number;
@@ -109,28 +111,30 @@ function ComboboxInput({
 const Converter = () => {
   const [fromCurrency, setFromCurrency] = useState<Currency>(currencies[0]);
   const [toCurrency, setToCurrency] = useState<Currency>(currencies[1]);
+  const dispatch = useAppDispatch();
+
+  const handleSelectFromCurrency = (currency: Currency) => {
+    setFromCurrency(currency);
+    dispatch(setCurrency(currency.name));
+  };
+
+  useEffect(() => {
+    console.log("From currency: ", fromCurrency);
+    console.log("To currency: ", toCurrency);
+  }, [fromCurrency, toCurrency]);
+
   return (
-    <div className="border-4 mx-24 p-8 text-black bg-white">
-      <div className="flex justify-between items-center">
+    <div className="border-4 mx-18 p-8 text-black bg-white">
+      <div className="flex justify-between items-center gap-3">
         <input type="number" />
-        {/* <select name="from_currency" id="">
-          <option value="usd">USD</option>
-          <option value="eur">EUR</option>
-          <option value="sek">SEK</option>
-        </select> */}
         <ComboboxInput
           currencies={currencies}
           selected={fromCurrency}
-          setSelected={setFromCurrency}
+          setSelected={handleSelectFromCurrency}
         />
         <button className="bg-white rounded-full [aspect-ratio: 1/1]">
           Reverse
         </button>
-        {/* <select name="to_currency" id="">
-          <option value="usd">USD</option>
-          <option value="eur">EUR</option>
-          <option value="sek">SEK</option>
-        </select> */}
         <ComboboxInput
           currencies={currencies}
           selected={toCurrency}
