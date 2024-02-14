@@ -5,7 +5,10 @@ const List = () => {
   return (
     <div>
       <hr className="p-2 my-8 bg-black" />
-      <h1>{currency}</h1>
+      <div className="bg-theme-primary-bg text-theme-text-primary-color">
+        <h1>The primary currency is :</h1>
+        <h3>{currency}</h3>
+      </div>
     </div>
   );
 };

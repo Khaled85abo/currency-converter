@@ -71,9 +71,9 @@
   --font-size-toolbar: 1.3rem;
 }
 
-:root.dark-theme {
-  --background-color: #121212; /* Dark background color */
-  --text-color: #ffffff; /* White text color */
+:root.dark {
+  --bg-primary-color: #121212; /* Dark background color */
+  --text-primary-color: #ffffff; /* White text color */
   --accent-color: #007bff; /* Accent color (blue) */
   --secondary-text-color: #a0a0a0; /* Secondary text color (light gray) */
   --border-color: #333333; /* Border color (dark gray) */

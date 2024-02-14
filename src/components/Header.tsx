@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
-import Converter from "./Converter";
+import { useAppDispatch } from "../hooks/redux";
+import { toggleTheme } from "../redux/features/theme/themeSlice";
 const Header = () => {
+  const dispatch = useAppDispatch();
   return (
     <header className="bg-header_bg text-white py-4 px-8">
       <nav className="md:flex justify-between">
@@ -15,8 +17,11 @@ const Header = () => {
             <li>
               <Link to="/">Converter </Link>
             </li>
-            <li>
-              <Link to="/">Tools</Link>
+            <li
+              className="cursor-pointer"
+              onClick={() => dispatch(toggleTheme())}
+            >
+              Toggle theme
             </li>
             <li>
               <Link to="/about">About</Link>

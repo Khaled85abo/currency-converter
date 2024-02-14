@@ -5,6 +5,8 @@ export default {
     extend: {
       colors: {
         header_bg: "#0A146D",
+        "theme-text-primary-color": "var(--text-primary-color)",
+        "theme-primary-bg": "var(--bg-primary-color)",
       },
     },
   },
