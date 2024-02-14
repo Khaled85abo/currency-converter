@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import currencySlice from "./features/currency/currencySlice";
 import { currencyApi } from "./features/currency/currencyApi";
+import themeSlice from "./features/theme/themeSlice";
 
 export const store = configureStore({
   reducer: {
     currency: currencySlice,
+    theme: themeSlice,
     [currencyApi.reducerPath]: currencyApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
