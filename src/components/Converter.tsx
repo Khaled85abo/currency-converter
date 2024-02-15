@@ -20,12 +20,14 @@ const currencies: Currency[] = [
 type ComboboxInputProps = {
   currencies: Currency[];
   selected: Currency;
-  setSelected: React.Dispatch<React.SetStateAction<Currency>>;
+  setSelected: (currency: Currency) => void;
+  label: string;
 };
 function ComboboxInput({
   selected,
   setSelected,
   currencies,
+  label,
 }: ComboboxInputProps) {
   const [query, setQuery] = useState("");
   const filteredPeople =
@@ -42,6 +44,7 @@ function ComboboxInput({
     <div className="w-72">
       <Combobox value={selected} onChange={setSelected}>
         <div className="relative mt-1">
+          <Combobox.Label>{label}</Combobox.Label>
           <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
             <Combobox.Input
               className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
@@ -111,11 +114,21 @@ function ComboboxInput({
 const Converter = () => {
   const [fromCurrency, setFromCurrency] = useState<Currency>(currencies[0]);
   const [toCurrency, setToCurrency] = useState<Currency>(currencies[1]);
+  const [amount, setAmount] = useState<number>(1);
   const dispatch = useAppDispatch();
 
   const handleSelectFromCurrency = (currency: Currency) => {
     setFromCurrency(currency);
     dispatch(setCurrency(currency.name));
+  };
+
+  const handleSelectToCurrency = (currency: Currency) => {
+    setToCurrency(currency);
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    console.log("form submitted");
   };
 
   useEffect(() => {
@@ -124,23 +137,52 @@ const Converter = () => {
   }, [fromCurrency, toCurrency]);
 
   return (
-    <div className="border-4 mx-18 p-8 text-black bg-white">
-      <div className="flex justify-between items-center gap-3">
-        <input type="number" />
-        <ComboboxInput
-          currencies={currencies}
-          selected={fromCurrency}
-          setSelected={handleSelectFromCurrency}
-        />
-        <button className="bg-white rounded-full [aspect-ratio: 1/1]">
-          Reverse
-        </button>
-        <ComboboxInput
-          currencies={currencies}
-          selected={toCurrency}
-          setSelected={setToCurrency}
-        />
-      </div>
+    <div className="rounded-xl shadow-converter p-8 text-black bg-white relative md:top-[-200px]">
+      <form onSubmit={handleSubmit}>
+        <div className="flex justify-between items-center gap-3">
+          <div>
+            <label htmlFor="amount">Amount</label>
+            <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+              <input
+                className="w-full border-none py-2 pl-3 pr-2 text-sm leading-5 text-gray-900 focus:ring-0"
+                id="amount"
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(Number(e.target.value))}
+              />
+            </div>
+          </div>
+
+          <ComboboxInput
+            label="From"
+            currencies={currencies}
+            selected={fromCurrency}
+            setSelected={handleSelectFromCurrency}
+          />
+          <button className=" [aspect-ratio: 1/1]  self-end mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height={20}
+              viewBox="0 0 17 17"
+              aria-hidden="true"
+              className="miscellany___StyledIconSwap-sc-1r08bla-2 ikHqUN"
+            >
+              <path
+                fill="blue"
+                fill-rule="evenodd"
+                d="M11.726 1.273l2.387 2.394H.667V5h13.446l-2.386 2.393.94.94 4-4-4-4-.94.94zM.666 12.333l4 4 .94-.94L3.22 13h13.447v-1.333H3.22l2.386-2.394-.94-.94-4 4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </button>
+          <ComboboxInput
+            label="To"
+            currencies={currencies}
+            selected={toCurrency}
+            setSelected={handleSelectToCurrency}
+          />
+        </div>
+      </form>
       <div className="flex justify-between mt-8">
         <div className="flex  items-center gap-3">
           <img src="" alt="info" className="d-block" />
@@ -150,7 +192,9 @@ const Converter = () => {
             sending money. Login to view send rates
           </p>
         </div>
-        <button>Convert</button>
+        <button className="bg-theme-btn-primary-bg-color text-white px-5 py-2 rounded-lg">
+          Convert
+        </button>
       </div>
     </div>
   );

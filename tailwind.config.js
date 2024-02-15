@@ -3,10 +3,14 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      boxShadow: {
+        converter: "rgba(35, 55, 80, 0.3) 0px 6px 12px",
+      },
       colors: {
         header_bg: "#0A146D",
-        "theme-text-primary-color": "var(--text-primary-color)",
+        "theme-primary-text-color": "var(--text-primary-color)",
         "theme-primary-bg": "var(--bg-primary-color)",
+        "theme-btn-primary-bg-color": "var(--btn-primary-bg-color)",
       },
     },
   },

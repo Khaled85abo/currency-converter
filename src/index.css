@@ -5,16 +5,7 @@
 :root {
   --bg-primary-color: #ffffff;
   --text-primary-color: #111314;
-  /* --text-color-primary: #495057; */
-  --bg-secondary-color: #4eac6d;
-  --text-secondary-color: #fefffe;
-  --btn-bg-color: #4eac6d;
-  --btn-text-color: #fcfefd;
-  --link-color: var(--bg-secondary-color);
-  --h1-font-size: calc(1.3rem + 0.46875vw);
-  --h2-font-size: calc(1.2rem + 0.46875vw);
-  --h3-font-size: calc(1.1rem + 0.46875vw);
-  --h4-font-size: calc(1rem + 0.46875vw);
+  --btn-primary-bg-color: rgb(0, 113, 235);
 
   /* testing box shadows */
   --green-transparent: rgba(78, 172, 109, 0.25);
@@ -74,10 +65,4 @@
 :root.dark {
   --bg-primary-color: #121212; /* Dark background color */
   --text-primary-color: #ffffff; /* White text color */
-  --accent-color: #007bff; /* Accent color (blue) */
-  --secondary-text-color: #a0a0a0; /* Secondary text color (light gray) */
-  --border-color: #333333; /* Border color (dark gray) */
-  --error-color: #ff0000; /* Error color (red) */
-  --success-color: #00cc00; /* Success color (green) */
-  --link-color: #0d6efd;
 }

@@ -5,7 +5,7 @@ const List = () => {
   return (
     <div>
       <hr className="p-2 my-8 bg-black" />
-      <div className="bg-theme-primary-bg text-theme-text-primary-color">
+      <div className="bg-theme-primary-bg text-theme-primary-text-color">
         <h1>The primary currency is :</h1>
         <h3>{currency}</h3>
       </div>
