@@ -39,17 +39,6 @@ const Header = () => {
           </ul>
         </div>
       </nav>
-      <div className="my-12 md:h-[35vh]">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold">
-            Trusted Global Currency Converter & Money Transfers
-          </h1>
-          <p>
-            Best source for currency conversion, sending money online and
-            tracking exchange rates
-          </p>
-        </div>
-      </div>
     </header>
   );
 };
