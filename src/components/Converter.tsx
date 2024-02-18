@@ -1,27 +1,16 @@
-import { Fragment, useEffect, useReducer, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { setFromCurrency as dispatchSetFromCurrency } from "../redux/features/currency/currencySlice";
 import { useLazyGetCurrenciesQuery } from "../redux/features/currency/currencyApi";
 import useDebounce from "../hooks/useDebounce";
-type Currency = {
-  id: number;
-  name: string;
-  value: string;
-};
-const currenciesList: Currency[] = [
-  { id: 1, name: "USD", value: "usd" },
-  { id: 2, name: "SEK", value: "sek" },
-  { id: 3, name: "EUR", value: "eur" },
-  { id: 4, name: "DNK", value: "dnk" },
-  { id: 5, name: "NRK", value: "nrk" },
-];
+import useGetPrice from "../hooks/useGetPrice";
 
 type ComboboxInputProps = {
-  currencies: Currency[];
-  selected: Currency;
-  setSelected: (currency: Currency) => void;
+  currencies: string[];
+  selected: string;
+  setSelected: (currency: string) => void;
   label: string;
 };
 function ComboboxInput({
@@ -31,11 +20,11 @@ function ComboboxInput({
   label,
 }: ComboboxInputProps) {
   const [query, setQuery] = useState("");
-  const filteredPeople =
+  const filteredCurrencies =
     query === ""
       ? currencies
       : currencies.filter((currency) =>
-          currency.name
+          currency
             .toLowerCase()
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, ""))
@@ -49,7 +38,7 @@ function ComboboxInput({
           <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
             <Combobox.Input
               className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-              displayValue={(currency: Currency) => currency.name}
+              displayValue={(currency: string) => currency}
               onChange={(event) => setQuery(event.target.value)}
             />
             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -67,20 +56,20 @@ function ComboboxInput({
             afterLeave={() => setQuery("")}
           >
             <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-              {filteredPeople.length === 0 && query !== "" ? (
+              {filteredCurrencies.length === 0 && query !== "" ? (
                 <div className="relative cursor-default select-none px-4 py-2 text-gray-700">
                   Nothing found.
                 </div>
               ) : (
-                filteredPeople.map((person) => (
+                filteredCurrencies.map((currency) => (
                   <Combobox.Option
-                    key={person.id}
+                    key={currency}
                     className={({ active }) =>
                       `relative cursor-default select-none py-2 pl-10 pr-4 ${
                         active ? "bg-teal-600 text-white" : "text-gray-900"
                       }`
                     }
-                    value={person}
+                    value={currency}
                   >
                     {({ selected, active }) => (
                       <>
@@ -89,7 +78,7 @@ function ComboboxInput({
                             selected ? "font-medium" : "font-normal"
                           }`}
                         >
-                          {person.name}
+                          {currency}
                         </span>
                         {selected ? (
                           <span
@@ -113,21 +102,22 @@ function ComboboxInput({
   );
 }
 const Converter = () => {
+  const { getPrice } = useGetPrice();
+  const [price, setPrice] = useState<number | null>(null);
   const currencies = useAppSelector((state) => state.currency.currencies);
   const [fetchCurrencies, { isLoading }] = useLazyGetCurrenciesQuery();
-  const [fromCurrency, setFromCurrency] = useState<Currency>(currenciesList[0]);
-  const [toCurrency, setToCurrency] = useState<Currency>(currenciesList[1]);
-  const [open, toggleOpen] = useReducer((state) => !state, false);
+  const [fromCurrency, setFromCurrency] = useState<string>("USD");
+  const [toCurrency, setToCurrency] = useState<string>("SEK");
   const [amount, setAmount] = useState<number>(1);
   const debouncedAmount = useDebounce(amount);
   const dispatch = useAppDispatch();
 
-  const handleSelectFromCurrency = (currency: Currency) => {
+  const handleSelectFromCurrency = (currency: string) => {
     setFromCurrency(currency);
-    dispatch(dispatchSetFromCurrency(currency.name));
+    dispatch(dispatchSetFromCurrency(currency));
   };
 
-  const handleSelectToCurrency = (currency: Currency) => {
+  const handleSelectToCurrency = (currency: string) => {
     setToCurrency(currency);
   };
 
@@ -144,22 +134,26 @@ const Converter = () => {
   const handleGetCurrencies = () => {
     fetchCurrencies({});
   };
-  useEffect(() => {
-    if (
-      currencies &&
-      currencies[fromCurrency.name] &&
-      currencies[toCurrency.name]
-    ) {
-      console.log("From currency: ", fromCurrency);
-      console.log("To currency: ", toCurrency);
-    } else {
-      console.log("No currencies: ", currencies);
-      console.log("From currency: ", fromCurrency);
-      console.log("To currency: ", toCurrency);
+
+  const handleGetPrice = async () => {
+    const price = await getPrice({
+      amount,
+      fromCurrency,
+      toCurrency,
+    });
+    if (price) {
+      console.log("price: ", price);
+      setPrice(price);
     }
-    console.log("amount: ", debouncedAmount);
+  };
+  useEffect(() => {
+    console.log("Inside useEffect to get Price");
+    handleGetPrice();
   }, [fromCurrency, toCurrency, debouncedAmount]);
 
+  if (!currencies) {
+    return <div className="h-[50px]">Loading ...</div>;
+  }
   return (
     <div className="h-[50px]">
       <div className="container mx-auto rounded-xl shadow-converter p-8 text-black bg-white relative top-[-200px] max-w-[900px]">
@@ -181,7 +175,7 @@ const Converter = () => {
 
               <ComboboxInput
                 label="From"
-                currencies={currenciesList}
+                currencies={Object.keys(currencies)}
                 selected={fromCurrency}
                 setSelected={handleSelectFromCurrency}
               />
@@ -207,24 +201,23 @@ const Converter = () => {
               </button>
               <ComboboxInput
                 label="To"
-                currencies={currenciesList}
+                currencies={Object.keys(currencies)}
                 selected={toCurrency}
                 setSelected={handleSelectToCurrency}
               />
             </div>
           </form>
-          {open && (
+          {price && currencies && (
             <div className="mt-8">
               <p>
-                {amount} {fromCurrency.name} =
+                {amount} {fromCurrency} ={Math.round(price)} {toCurrency}
               </p>
-              <h3>16.767084 {toCurrency.name}</h3>
+              {/* <p>
+                1 {fromCurrency.name} = to be added {toCurrency.name}
+              </p>
               <p>
-                1 {fromCurrency.name} = 0.0958119 {toCurrency.name}
-              </p>
-              <p>
-                1 {toCurrency.name} = 10.4369 {fromCurrency.name}
-              </p>
+                1 {toCurrency.name} = to be added {fromCurrency.name}
+              </p> */}
             </div>
           )}
           <div className="flex justify-between mt-8">
