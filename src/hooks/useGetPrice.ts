@@ -34,6 +34,12 @@ const useGetPrice = () => {
       return amount / dollarRates[fromCurrency];
     }
     // Manage two different currencies
+    // 1 - get the price of fromCurrency in dollars
+    const priceInDollarsFromCurrency = amount / dollarRates[fromCurrency];
+    // 2 - get the price of toCurrency in dollars
+    const priceInDollarsToCurrency =
+      dollarRates[toCurrency] * priceInDollarsFromCurrency;
+    return priceInDollarsToCurrency;
   };
   return { getPrice };
 };
