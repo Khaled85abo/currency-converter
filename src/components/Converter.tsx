@@ -210,7 +210,12 @@ const Converter = () => {
           {price && currencies && (
             <div className="mt-8">
               <p>
-                {amount} {fromCurrency} ={Math.round(price)} {toCurrency}
+                {amount} {fromCurrency} -{" "}
+                <span className=" text-gray-500">
+                  {currencies[fromCurrency]}
+                </span>{" "}
+                = {Math.round(price)} {toCurrency}{" "}
+                <span className=" text-gray-500">{currencies[toCurrency]}</span>
               </p>
               {/* <p>
                 1 {fromCurrency.name} = to be added {toCurrency.name}
@@ -230,11 +235,10 @@ const Converter = () => {
               </p>
             </div>
             <button
-              onClick={handleGetCurrencies}
+              onClick={handleGetPrice}
               className="bg-theme-btn-primary-bg-color text-white px-5 py-2 rounded-lg"
             >
-              {/* Convert */}
-              {isLoading ? "Loading..." : "get currencies list"}
+              Convert
             </button>
           </div>
         </div>
