@@ -133,17 +133,25 @@ const Converter = () => {
                 = {price.toFixed(2)} {toCurrency}{" "}
                 <span className=" text-gray-500">{currencies[toCurrency]}</span>
               </p>
-              {/* <p>
-                1 {fromCurrency.name} = to be added {toCurrency.name}
-              </p>
-              <p>
-                1 {toCurrency.name} = to be added {fromCurrency.name}
-              </p> */}
             </div>
           )}
           <div className="flex justify-between mt-8">
             <div className="flex  items-center gap-3">
-              <img src="" alt="info" className="d-block" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                />
+              </svg>
+
               <p className="text-xs md:max-w-[400px]">
                 We use the mid-market rate for our Converter. This is for
                 informational purposes only. You won’t receive this rate when
