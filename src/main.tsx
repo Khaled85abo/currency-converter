@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { useAppSelector } from "./hooks/redux";
+import SingleCurrency from "./pages/SingleCurrency";
 function App() {
   const theme = useAppSelector((state) => state.theme.theme);
 
@@ -26,6 +27,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />}></Route>
           <Route path="/about" element={<About />}></Route>
+          <Route path="/:currency" element={<SingleCurrency />}></Route>
           <Route path="/*" element={<NotFound />}></Route>
         </Route>
       </Routes>

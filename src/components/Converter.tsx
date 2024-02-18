@@ -132,6 +132,10 @@ const Converter = () => {
     console.log("form submitted");
   };
 
+  const handleSwapCurrencies = () => {
+    setFromCurrency(toCurrency);
+    setToCurrency(fromCurrency);
+  };
   useEffect(() => {
     console.log("From currency: ", fromCurrency);
     console.log("To currency: ", toCurrency);
@@ -162,7 +166,11 @@ const Converter = () => {
                 selected={fromCurrency}
                 setSelected={handleSelectFromCurrency}
               />
-              <button className=" [aspect-ratio: 1/1]  self-end mb-2">
+              <button
+                type="button"
+                onClick={handleSwapCurrencies}
+                className=" [aspect-ratio: 1/1]  self-end mb-2"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height={20}
@@ -188,10 +196,16 @@ const Converter = () => {
           </form>
           {open && (
             <div className="mt-8">
-              <p>175.00 Swedish Kronor =</p>
-              <h3>16.767084 US Dollars</h3>
-              <p>1 SEK = 0.0958119 USD</p>
-              <p>1 USD = 10.4369 SEK</p>
+              <p>
+                {amount} {fromCurrency.name} =
+              </p>
+              <h3>16.767084 {toCurrency.name}</h3>
+              <p>
+                1 {fromCurrency.name} = 0.0958119 {toCurrency.name}
+              </p>
+              <p>
+                1 {toCurrency.name} = 10.4369 {fromCurrency.name}
+              </p>
             </div>
           )}
           <div className="flex justify-between mt-8">
