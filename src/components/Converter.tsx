@@ -2,8 +2,10 @@ import { Fragment, useEffect, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { setFromCurrency as dispatchSetFromCurrency } from "../redux/features/currency/currencySlice";
-import { useLazyGetCurrenciesQuery } from "../redux/features/currency/currencyApi";
+import {
+  setFromCurrency as dispatchSetFromCurrency,
+  setToCurrency as dispatchSetToCurrency,
+} from "../redux/features/currency/currencySlice";
 import useDebounce from "../hooks/useDebounce";
 import useGetPrice from "../hooks/useGetPrice";
 
@@ -105,7 +107,6 @@ const Converter = () => {
   const { getPrice } = useGetPrice();
   const [price, setPrice] = useState<number | null>(null);
   const currencies = useAppSelector((state) => state.currency.currencies);
-  const [fetchCurrencies, { isLoading }] = useLazyGetCurrenciesQuery();
   const [fromCurrency, setFromCurrency] = useState<string>("USD");
   const [toCurrency, setToCurrency] = useState<string>("SEK");
   const [amount, setAmount] = useState<number>(1);
@@ -119,6 +120,7 @@ const Converter = () => {
 
   const handleSelectToCurrency = (currency: string) => {
     setToCurrency(currency);
+    dispatch(dispatchSetToCurrency(currency));
   };
 
   const handleSubmit = (e: any) => {
@@ -129,10 +131,6 @@ const Converter = () => {
   const handleSwapCurrencies = () => {
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
-  };
-
-  const handleGetCurrencies = () => {
-    fetchCurrencies({});
   };
 
   const handleGetPrice = async () => {
@@ -214,7 +212,7 @@ const Converter = () => {
                 <span className=" text-gray-500">
                   {currencies[fromCurrency]}
                 </span>{" "}
-                = {Math.round(price)} {toCurrency}{" "}
+                = {price.toFixed(2)} {toCurrency}{" "}
                 <span className=" text-gray-500">{currencies[toCurrency]}</span>
               </p>
               {/* <p>
