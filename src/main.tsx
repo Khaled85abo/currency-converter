@@ -10,10 +10,15 @@ import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { useAppSelector } from "./hooks/redux";
 import SingleCurrency from "./pages/SingleCurrency";
+import { useLazyGetCurrenciesQuery } from "./redux/features/currency/currencyApi";
 function App() {
   const theme = useAppSelector((state) => state.theme.theme);
-
+  const currencies = useAppSelector((state) => state.currency.currencies);
+  const [fetchCurrencies] = useLazyGetCurrenciesQuery();
   useEffect(() => {
+    if (!currencies) {
+      fetchCurrencies({});
+    }
     // Apply the 'dark' class to the HTML element if the theme is 'dark'
     if (theme === "dark") {
       document.documentElement.classList.add("dark");

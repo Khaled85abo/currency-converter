@@ -2,7 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type Theme = "dark" | "light";
 const initialState: { theme: Theme } = {
-  theme: (localStorage.getItem("theme") as Theme) || "light",
+  theme:
+    (localStorage.getItem("theme") as Theme) ||
+    (window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light"),
 };
 
 export const themeSlice = createSlice({

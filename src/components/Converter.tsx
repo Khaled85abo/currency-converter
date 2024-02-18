@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useReducer, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import { useAppDispatch } from "../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { setFromCurrency as dispatchSetFromCurrency } from "../redux/features/currency/currencySlice";
 import { useLazyGetCurrenciesQuery } from "../redux/features/currency/currencyApi";
 import useDebounce from "../hooks/useDebounce";
@@ -10,7 +10,7 @@ type Currency = {
   name: string;
   value: string;
 };
-const currencies: Currency[] = [
+const currenciesList: Currency[] = [
   { id: 1, name: "USD", value: "usd" },
   { id: 2, name: "SEK", value: "sek" },
   { id: 3, name: "EUR", value: "eur" },
@@ -113,9 +113,10 @@ function ComboboxInput({
   );
 }
 const Converter = () => {
+  const currencies = useAppSelector((state) => state.currency.currencies);
   const [fetchCurrencies, { isLoading }] = useLazyGetCurrenciesQuery();
-  const [fromCurrency, setFromCurrency] = useState<Currency>(currencies[0]);
-  const [toCurrency, setToCurrency] = useState<Currency>(currencies[1]);
+  const [fromCurrency, setFromCurrency] = useState<Currency>(currenciesList[0]);
+  const [toCurrency, setToCurrency] = useState<Currency>(currenciesList[1]);
   const [open, toggleOpen] = useReducer((state) => !state, false);
   const [amount, setAmount] = useState<number>(1);
   const debouncedAmount = useDebounce(amount);
@@ -144,8 +145,18 @@ const Converter = () => {
     fetchCurrencies({});
   };
   useEffect(() => {
-    console.log("From currency: ", fromCurrency);
-    console.log("To currency: ", toCurrency);
+    if (
+      currencies &&
+      currencies[fromCurrency.name] &&
+      currencies[toCurrency.name]
+    ) {
+      console.log("From currency: ", fromCurrency);
+      console.log("To currency: ", toCurrency);
+    } else {
+      console.log("No currencies: ", currencies);
+      console.log("From currency: ", fromCurrency);
+      console.log("To currency: ", toCurrency);
+    }
     console.log("amount: ", debouncedAmount);
   }, [fromCurrency, toCurrency, debouncedAmount]);
 
@@ -170,7 +181,7 @@ const Converter = () => {
 
               <ComboboxInput
                 label="From"
-                currencies={currencies}
+                currencies={currenciesList}
                 selected={fromCurrency}
                 setSelected={handleSelectFromCurrency}
               />
@@ -196,7 +207,7 @@ const Converter = () => {
               </button>
               <ComboboxInput
                 label="To"
-                currencies={currencies}
+                currencies={currenciesList}
                 selected={toCurrency}
                 setSelected={handleSelectToCurrency}
               />

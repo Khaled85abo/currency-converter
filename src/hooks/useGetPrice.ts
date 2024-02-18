@@ -9,10 +9,11 @@ const useGetPrice = async (
 ) => {
   const [fetchRates] = useLazyGetDollarPriceQuery();
   let dollarRates = useAppSelector((state) => state.currency.dollarPriceRates);
-  const isOutdated = useGetTimestampDiff();
+  // const isOutdated = useGetTimestampDiff();
+  const isOutdated = () => false;
   if (isOutdated() || !dollarRates) {
     const { data } = await fetchRates({});
-    dollarRates = data["rates"];
+    dollarRates = data["rates"] as { [key: string]: number };
   }
   if (fromCurrency == toCurrency) {
     return amount;
