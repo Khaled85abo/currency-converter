@@ -1,5 +1,6 @@
 import { useLazyGetDollarPriceQuery } from "../redux/features/currency/currencyApi";
 import { useAppSelector } from "./redux";
+import countPrice from "../utilities/countPrice";
 import useGetTimestampDiff from "./useGetTimestampDiff";
 
 const useGetPrice = () => {
@@ -24,22 +25,23 @@ const useGetPrice = () => {
       const { data } = await fetchRates({});
       dollarRates = data["rates"] as { [key: string]: number };
     }
-    if (fromCurrency == toCurrency) {
-      return amount;
-    }
-    if (fromCurrency == "USD") {
-      return dollarRates[toCurrency] * amount;
-    }
-    if (toCurrency == "USD") {
-      return amount / dollarRates[fromCurrency];
-    }
-    // Manage two different currencies
-    // 1 - get the price of fromCurrency in dollars
-    const priceInDollarsFromCurrency = amount / dollarRates[fromCurrency];
-    // 2 - get the price of toCurrency in dollars
-    const priceInDollarsToCurrency =
-      dollarRates[toCurrency] * priceInDollarsFromCurrency;
-    return priceInDollarsToCurrency;
+    return countPrice({ amount, fromCurrency, toCurrency, dollarRates });
+    // if (fromCurrency == toCurrency) {
+    //   return amount;
+    // }
+    // if (fromCurrency == "USD") {
+    //   return dollarRates[toCurrency] * amount;
+    // }
+    // if (toCurrency == "USD") {
+    //   return amount / dollarRates[fromCurrency];
+    // }
+    // // Manage two different currencies
+    // // 1 - get the price of fromCurrency in dollars
+    // const priceInDollarsFromCurrency = amount / dollarRates[fromCurrency];
+    // // 2 - get the price of toCurrency in dollars
+    // const priceInDollarsToCurrency =
+    //   dollarRates[toCurrency] * priceInDollarsFromCurrency;
+    // return priceInDollarsToCurrency;
   };
   return { getPrice };
 };

@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import {
   setFromCurrency as dispatchSetFromCurrency,
   setToCurrency as dispatchSetToCurrency,
+  setAmount as dispatchSetAmount,
 } from "../redux/features/currency/currencySlice";
 import useDebounce from "../hooks/useDebounce";
 import useGetPrice from "../hooks/useGetPrice";
@@ -122,6 +123,10 @@ const Converter = () => {
     setToCurrency(currency);
     dispatch(dispatchSetToCurrency(currency));
   };
+  const handleSetAmount = (value: number) => {
+    setAmount(value);
+    dispatch(dispatchSetAmount(value));
+  };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -131,6 +136,8 @@ const Converter = () => {
   const handleSwapCurrencies = () => {
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
+    dispatch(dispatchSetFromCurrency(toCurrency));
+    dispatch(dispatchSetToCurrency(fromCurrency));
   };
 
   const handleGetPrice = async () => {
@@ -143,6 +150,9 @@ const Converter = () => {
       console.log("price: ", price);
       setPrice(price);
     }
+    dispatch(dispatchSetFromCurrency(fromCurrency));
+    dispatch(dispatchSetToCurrency(toCurrency));
+    dispatch(dispatchSetAmount(amount));
   };
   useEffect(() => {
     console.log("Inside useEffect to get Price");
@@ -166,7 +176,7 @@ const Converter = () => {
                     id="amount"
                     type="number"
                     value={amount}
-                    onChange={(e) => setAmount(Number(e.target.value))}
+                    onChange={(e) => handleSetAmount(Number(e.target.value))}
                   />
                 </div>
               </div>

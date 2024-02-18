@@ -6,11 +6,13 @@ type InitialState = {
   currencies: { [key: string]: string } | null;
   dollarPriceRates: Record<string, number> | null;
   timestamp: number | null;
+  amount: number;
 };
 const initialState: InitialState = {
   fromCurrency: "",
   toCurrency: "",
   currencies: null,
+  amount: 0,
   dollarPriceRates: {
     AED: 3.6729,
     AFN: 73.783345,
@@ -195,6 +197,9 @@ export const currencySlice = createSlice({
     setToCurrency: (state, action: PayloadAction<string>) => {
       state.toCurrency = action.payload;
     },
+    setAmount: (state, action: PayloadAction<number>) => {
+      state.amount = action.payload;
+    },
     setCurrencies: (state, action: PayloadAction<Record<string, string>>) => {
       state.currencies = action.payload;
     },
@@ -213,6 +218,7 @@ export const currencySlice = createSlice({
 export const {
   setFromCurrency,
   setToCurrency,
+  setAmount,
   setTimestamp,
   setDollarPricesRates,
   setCurrencies,
