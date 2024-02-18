@@ -2,8 +2,8 @@ import { Fragment, useEffect, useReducer, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useAppDispatch } from "../hooks/redux";
-import { setCurrency } from "../redux/features/currency/currencySlice";
-
+import { setFromCurrency as dispatchSetFromCurrency } from "../redux/features/currency/currencySlice";
+import { useLazyGetCurrenciesQuery } from "../redux/features/currency/currencyApi";
 type Currency = {
   id: number;
   name: string;
@@ -112,6 +112,7 @@ function ComboboxInput({
   );
 }
 const Converter = () => {
+  const [fetchCurrencies, { isLoading }] = useLazyGetCurrenciesQuery();
   const [fromCurrency, setFromCurrency] = useState<Currency>(currencies[0]);
   const [toCurrency, setToCurrency] = useState<Currency>(currencies[1]);
   const [open, toggleOpen] = useReducer((state) => !state, false);
@@ -120,7 +121,7 @@ const Converter = () => {
 
   const handleSelectFromCurrency = (currency: Currency) => {
     setFromCurrency(currency);
-    dispatch(setCurrency(currency.name));
+    dispatch(dispatchSetFromCurrency(currency.name));
   };
 
   const handleSelectToCurrency = (currency: Currency) => {
@@ -135,6 +136,10 @@ const Converter = () => {
   const handleSwapCurrencies = () => {
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
+  };
+
+  const handleGetCurrencies = () => {
+    fetchCurrencies({});
   };
   useEffect(() => {
     console.log("From currency: ", fromCurrency);
@@ -180,9 +185,9 @@ const Converter = () => {
                 >
                   <path
                     fill="blue"
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M11.726 1.273l2.387 2.394H.667V5h13.446l-2.386 2.393.94.94 4-4-4-4-.94.94zM.666 12.333l4 4 .94-.94L3.22 13h13.447v-1.333H3.22l2.386-2.394-.94-.94-4 4z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   ></path>
                 </svg>
               </button>
@@ -218,10 +223,11 @@ const Converter = () => {
               </p>
             </div>
             <button
-              onClick={toggleOpen}
+              onClick={handleGetCurrencies}
               className="bg-theme-btn-primary-bg-color text-white px-5 py-2 rounded-lg"
             >
-              Convert
+              {/* Convert */}
+              {isLoading ? "Loading..." : "get currencies list"}
             </button>
           </div>
         </div>
