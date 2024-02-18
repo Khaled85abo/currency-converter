@@ -37,7 +37,6 @@ const Converter = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log("form submitted");
   };
 
   const handleSwapCurrencies = () => {
@@ -54,7 +53,6 @@ const Converter = () => {
       toCurrency,
     });
     if (price) {
-      console.log("price: ", price);
       setPrice(price);
     }
     dispatch(dispatchSetFromCurrency(fromCurrency));
@@ -62,7 +60,6 @@ const Converter = () => {
     dispatch(dispatchSetAmount(amount));
   };
   useEffect(() => {
-    console.log("Inside useEffect to get Price");
     if (firstRender) {
       setFirstRender(false);
     } else {

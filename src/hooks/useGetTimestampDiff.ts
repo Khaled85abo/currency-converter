@@ -14,13 +14,15 @@ const useGetTimestampDiff = () => {
   const isOutdated = (diffMinutes: number = config.timeSyncDiff) => {
     if (!timestamp) return true;
     const minuteDiff = getTimestampInSeconds() - timestamp;
+    console.log("minutes difference: ", minuteDiff, "seconds");
+    console.log("minutes difference: ", minuteDiff / 60, "minutes");
     if (Math.floor(minuteDiff / 60) > diffMinutes) {
       return true;
     }
     return false;
   };
 
-  return isOutdated;
+  return { isOutdated };
 };
 
 export default useGetTimestampDiff;

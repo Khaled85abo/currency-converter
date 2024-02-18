@@ -6,7 +6,7 @@ import useGetTimestampDiff from "./useGetTimestampDiff";
 const useGetPrice = () => {
   const [fetchRates] = useLazyGetDollarPriceQuery();
   let dollarRates = useAppSelector((state) => state.currency.dollarPriceRates);
-  const isOutdated = useGetTimestampDiff();
+  const { isOutdated } = useGetTimestampDiff();
   const getPrice = async ({
     amount,
     toCurrency,
@@ -16,6 +16,12 @@ const useGetPrice = () => {
     toCurrency: string;
     fromCurrency: string;
   }) => {
+    console.log(
+      "%c is Out dated ",
+      "padding: 3px 8px; color: white; background: black",
+      isOutdated()
+    );
+
     if (isOutdated() || !dollarRates) {
       console.log(
         "%cFetching new dollar rates: ",

@@ -184,7 +184,7 @@ const initialState: InitialState = {
     ZMW: 24.751566,
     ZWL: 322,
   },
-  timestamp: null,
+  timestamp: 1708293600,
 };
 
 export const currencySlice = createSlice({

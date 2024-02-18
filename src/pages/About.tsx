@@ -1,23 +1,19 @@
 import { useSpring, animated } from "@react-spring/web";
 
 const About = () => {
-  // const springs = useSpring({
-  //   from: { x: 0 },
-  //   to: { x: 100 },
-  //   delay: 2000,
-  // });
+  const springs = useSpring({
+    from: { y: 100, opacity: 0 },
+    to: { y: 0, opacity: 1 },
+  });
   return (
     <div className="container m-auto my-3 min-h-[50vh]">
-      <h2 className="text-3xl">About page</h2>
-      {/* <animated.div
+      <animated.div
         style={{
-          width: 80,
-          height: 80,
-          background: "#ff6d6d",
-          borderRadius: 8,
           ...springs,
         }}
-      /> */}
+      >
+        <h2 className="text-3xl">About page</h2>
+      </animated.div>
     </div>
   );
 };
