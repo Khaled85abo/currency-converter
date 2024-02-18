@@ -6,8 +6,7 @@ import useGetTimestampDiff from "./useGetTimestampDiff";
 const useGetPrice = () => {
   const [fetchRates] = useLazyGetDollarPriceQuery();
   let dollarRates = useAppSelector((state) => state.currency.dollarPriceRates);
-  // const isOutdated = useGetTimestampDiff();
-  const isOutdated = () => false;
+  const isOutdated = useGetTimestampDiff();
   const getPrice = async ({
     amount,
     toCurrency,
@@ -26,22 +25,6 @@ const useGetPrice = () => {
       dollarRates = data["rates"] as { [key: string]: number };
     }
     return countPrice({ amount, fromCurrency, toCurrency, dollarRates });
-    // if (fromCurrency == toCurrency) {
-    //   return amount;
-    // }
-    // if (fromCurrency == "USD") {
-    //   return dollarRates[toCurrency] * amount;
-    // }
-    // if (toCurrency == "USD") {
-    //   return amount / dollarRates[fromCurrency];
-    // }
-    // // Manage two different currencies
-    // // 1 - get the price of fromCurrency in dollars
-    // const priceInDollarsFromCurrency = amount / dollarRates[fromCurrency];
-    // // 2 - get the price of toCurrency in dollars
-    // const priceInDollarsToCurrency =
-    //   dollarRates[toCurrency] * priceInDollarsFromCurrency;
-    // return priceInDollarsToCurrency;
   };
   return { getPrice };
 };
