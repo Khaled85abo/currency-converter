@@ -4,6 +4,7 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useAppDispatch } from "../hooks/redux";
 import { setFromCurrency as dispatchSetFromCurrency } from "../redux/features/currency/currencySlice";
 import { useLazyGetCurrenciesQuery } from "../redux/features/currency/currencyApi";
+import useDebounce from "../hooks/useDebounce";
 type Currency = {
   id: number;
   name: string;
@@ -117,6 +118,7 @@ const Converter = () => {
   const [toCurrency, setToCurrency] = useState<Currency>(currencies[1]);
   const [open, toggleOpen] = useReducer((state) => !state, false);
   const [amount, setAmount] = useState<number>(1);
+  const debouncedAmount = useDebounce(amount);
   const dispatch = useAppDispatch();
 
   const handleSelectFromCurrency = (currency: Currency) => {
@@ -144,7 +146,8 @@ const Converter = () => {
   useEffect(() => {
     console.log("From currency: ", fromCurrency);
     console.log("To currency: ", toCurrency);
-  }, [fromCurrency, toCurrency]);
+    console.log("amount: ", debouncedAmount);
+  }, [fromCurrency, toCurrency, debouncedAmount]);
 
   return (
     <div className="h-[50px]">
